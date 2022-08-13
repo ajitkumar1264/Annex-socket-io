@@ -8,7 +8,8 @@ function Chat({ socket }) {
   const [text, settext] = useState("");
   const [currnetmessage, setcurrnetmessage] = useState("");
   const { name, setname, setroom, room, handlechange } = useContext(annex);
-  const [fonttheme, setfonttheme] = useState("")
+  const [fonttheme, setfonttheme] = useState("");
+  const [read, setread] = useState(false);
 
   const [mtheme, setmtheme] = useState({
     color: "black",
@@ -35,13 +36,8 @@ function Chat({ socket }) {
 
 
       setmtheme({
-
-
         color: "black",
         fontFamily: "monospace"
-
-
-
       })
 
       setbtntheme({
@@ -73,19 +69,7 @@ function Chat({ socket }) {
 
       })
     }
-
-
-
-
   }
-
-
-
-
-
-
-
-
 
   const newmessage = async () => {
     if (currnetmessage !== "") {
@@ -98,17 +82,58 @@ function Chat({ socket }) {
           ":" +
           new Date(Date.now()).getMinutes(),
       };
-      await socket.emit("send_message", messag);
+
+      setTimeout(() => {
+        
+        socket.emit("send_message", messag);
+        setread(true);
+
+      }, 5000);
+      
+      
+      
+      
+     
       setMessagelist((list) => [...list, messag]);
       setcurrnetmessage("")
+      
+     
     }
   };
 
   useEffect(() => {
-    socket.off("recieved").on("recieved", (block) => {
-      console.log(block);
-      setMessagelist((list) => [...list, block]);
-    });
+
+   
+    
+
+
+
+      socket.off("recieved").on("recieved", (block) => {
+        console.log(block);
+        setread(false);
+
+        setMessagelist((list) => [...list, block]);
+       
+        
+       
+        
+      });
+      
+ 
+
+      
+     
+      
+
+
+      
+   
+
+
+   
+
+
+
   }, [socket]);
 
 
@@ -142,12 +167,6 @@ function Chat({ socket }) {
 
                   <h1>Vaghela Ajitkumar 👨‍💻</h1>
                 </div>
-
-
-
-
-
-
               </div>
 
             </div>
@@ -158,7 +177,7 @@ function Chat({ socket }) {
                 <button>change mode :</button>
 
               </div>
-              <div className=" ml-5 box bg-green-500 px-4 py-1 rounded-lg " style={btntheme}>
+              <div className=" ml-5 box bg-pink-500 px-4 py-1 rounded-lg " style={btntheme}>
                 <button onClick={modetheme} className="text-xl">{mode}</button>
 
               </div>
@@ -197,6 +216,18 @@ function Chat({ socket }) {
                         <div className="" style={{ fontSize: "10px" }}>
                           {dat.time}
                         </div>
+
+                        {read &&
+                        
+                          <div className="ml-2" style={{ fontSize: "2px" }}>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                          </div>
+                        }
+                       
+
+
                       </div>
                     </div>
                   </div>
@@ -207,7 +238,7 @@ function Chat({ socket }) {
           <div className="flex justify-center item-center box border-l-8 border-r-8   border-green-500 ">
             <div className="mt-5 mb-5 " >
               <input style={btntheme}
-                className="border-4 border-green-800 placeholder:text-gray-500  px-5 py-2"
+                className="border-4 border-green-700 placeholder:text-gray-500  px-5 py-2"
                 type="text"
                 placeholder="message"
                 onChange={(e) => {
