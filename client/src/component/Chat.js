@@ -10,6 +10,9 @@ function Chat({ socket }) {
   const { name, setname, setroom, room, handlechange } = useContext(annex);
   const [fonttheme, setfonttheme] = useState("");
   const [read, setread] = useState(false);
+  const [connetname, setconnetname] = useState("")
+  const [contect, setcontect] = useState("")
+ 
 
   const [mtheme, setmtheme] = useState({
     color: "black",
@@ -92,7 +95,8 @@ function Chat({ socket }) {
       
       
       
-      
+      const k=messag.username;
+      setconnetname(k);
      
       setMessagelist((list) => [...list, messag]);
       setcurrnetmessage("")
@@ -101,6 +105,7 @@ function Chat({ socket }) {
     }
   };
 
+  
   useEffect(() => {
 
    
@@ -110,6 +115,10 @@ function Chat({ socket }) {
 
       socket.off("recieved").on("recieved", (block) => {
         console.log(block);
+         
+        const j=block.username;
+        console.log(j);
+        setcontect(j)
         setread(false);
 
         setMessagelist((list) => [...list, block]);
@@ -181,19 +190,34 @@ function Chat({ socket }) {
                 <button onClick={modetheme} className="text-xl">{mode}</button>
 
               </div>
+              
+          </div>
 
-
+          <div className="flex mt-10 text-xl ">
+             <h1>your username : <span className="text-pink-500">{name}</span>  and room : <span className="text-pink-500">{room}</span></h1>
 
             </div>
 
-          </div>
+
+          <div className="flex mt-10 text-2xl ">
+             conversation between : &nbsp;&nbsp;<span className='text-green-500'>{connetname}</span> &nbsp;&nbsp; and &nbsp;&nbsp; <span className='text-green-500'>  {contect} </span> </div>
+
+            </div>
+
         </div>
 
         <div className="px-10  ">
+       
           <div className=" box w-80 h-96 border-8 border-green-500  snap-y snap-screen overflow-y-auto  ">
+
+          {Messagelist.map((dat, id) => {
+            return (
+
+<div>
+
+
             <div className="mt-5  ">
-              {Messagelist.map((dat, id) => {
-                return (
+             
                   <div>
                     <div
                       className={
@@ -202,6 +226,8 @@ function Chat({ socket }) {
                           : "flex justify-start item-center mb-5 ml-5"
                       }
                     >
+                    
+                    
                       <div
                         className={
                           name === dat.username
@@ -231,9 +257,11 @@ function Chat({ socket }) {
                       </div>
                     </div>
                   </div>
-                );
-              })}
+              
             </div>
+            </div>
+            );
+          })}
           </div>
           <div className="flex justify-center item-center box border-l-8 border-r-8   border-green-500 ">
             <div className="mt-5 mb-5 " >
